@@ -7,7 +7,9 @@ export async function GET() {
   try {
     const client = await clientPromise;
     const db = client.db(process.env.MONGODB_DB);
-    const collection = db.collection(process.env.MONGODB_BG_COLLECTION || "Bgimgs");
+    const collection = db.collection(
+      process.env.MONGODB_BG_COLLECTION || "Bgimgs"
+    );
 
     const bgDoc = await collection.findOne(
       { type: "background" },
@@ -20,7 +22,7 @@ export async function GET() {
 
     let imageBuffer: Buffer;
 
-    if (Buffer.isBuffer(bgDoc.image.buffer)) {
+    if (Buffer.isBuffer(bgDoc.image?.buffer)) {
       imageBuffer = bgDoc.image.buffer;
     } else if (Buffer.isBuffer(bgDoc.image)) {
       imageBuffer = bgDoc.image;
@@ -35,11 +37,15 @@ export async function GET() {
     let contentType = "image/png";
     if (extension === ".jpg" || extension === ".jpeg") contentType = "image/jpeg";
     if (extension === ".webp") contentType = "image/webp";
+    if (extension === ".gif") contentType = "image/gif";
 
-    return new NextResponse(imageBuffer, {
+    const uint8Array = new Uint8Array(imageBuffer);
+
+    return new NextResponse(uint8Array, {
       status: 200,
       headers: {
         "Content-Type": contentType,
+        "Content-Length": String(uint8Array.byteLength),
         "Cache-Control": "no-store",
       },
     });
