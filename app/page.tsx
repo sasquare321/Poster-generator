@@ -525,18 +525,6 @@ function PosterContent({
             borderBottom: "1px solid rgba(190,130,52,0.32)",
           }}
         >
-          <div
-            style={{
-              position: "absolute",
-              left: "48px",
-              right: "48px",
-              top: "50%",
-              transform: "translateY(-50%)",
-              height: "1px",
-              background:
-                "linear-gradient(90deg, transparent 0%, rgba(188,126,46,0.55) 20%, rgba(188,126,46,0.55) 80%, transparent 100%)",
-            }}
-          />
 
           <img
             src="/assets/left.png"
@@ -547,7 +535,7 @@ function PosterContent({
               top: "50%",
               transform: "translateY(-50%)",
               width: "112px",
-              height: "26px",
+              height: "50px",
               objectFit: "contain",
             }}
           />
@@ -561,7 +549,7 @@ function PosterContent({
               top: "50%",
               transform: "translateY(-50%)",
               width: "112px",
-              height: "26px",
+              height: "50px",
               objectFit: "contain",
             }}
           />
