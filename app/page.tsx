@@ -498,7 +498,8 @@ function PosterContent({
           bottom: 0,
           height: "175px",
           zIndex: 6,
-          background: "linear-gradient(180deg, rgba(16,7,5,0.95) 0%, rgba(28,10,7,0.97) 100%)",
+          background:
+            "linear-gradient(180deg, rgba(16,7,5,0.95) 0%, rgba(28,10,7,0.97) 100%)",
           borderTop: "1px solid rgba(214,158,70,0.35)",
           overflow: "hidden",
         }}
@@ -525,7 +526,6 @@ function PosterContent({
             borderBottom: "1px solid rgba(190,130,52,0.32)",
           }}
         >
-
           <img
             src="/assets/left.png"
             alt="Left ornament"
@@ -666,17 +666,21 @@ export default function HomePage() {
           setPrices({ gold: d.gold, silver: d.silver, date: d.date });
         }
       })
-      .catch(console.error);
+      .catch((error) => {
+        console.error("Price fetch failed:", error);
+      });
   }, []);
 
   useEffect(() => {
-    const randomUrl = `/api/bg/?t=${Date.now()}`;
-    setBgUrl(randomUrl);
+    if (!prices?.date) return;
 
-    extractPaletteFromImage(randomUrl)
+    const nextBgUrl = `/api/bg?date=${encodeURIComponent(prices.date)}&t=${Date.now()}`;
+    setBgUrl(nextBgUrl);
+
+    extractPaletteFromImage(nextBgUrl)
       .then(setPalette)
       .catch(() => setPalette(createPalette("#3a1209")));
-  }, []);
+  }, [prices]);
 
   useEffect(() => {
     const updateScale = () => {
@@ -751,7 +755,7 @@ export default function HomePage() {
       downloadBlob(blob, "sms-jewellers-gold-rate.png");
     } catch (error) {
       console.error("PNG export failed:", error);
-      alert("PNG export failed. Check that /api/bg is working and try again.");
+      alert("PNG export failed. Check that /api/bg and /api/prices/latest are working and try again.");
     } finally {
       setDownloading(false);
     }
@@ -777,7 +781,7 @@ export default function HomePage() {
       pdf.save("sms-jewellers-gold-rate.pdf");
     } catch (error) {
       console.error("PDF export failed:", error);
-      alert("PDF export failed. Check that /api/bg is working and try again.");
+      alert("PDF export failed. Check that /api/bg and /api/prices/latest are working and try again.");
     } finally {
       setDownloading(false);
     }
